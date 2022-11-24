@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "688290476698",
+    "project_id": "munch-application-7682e",
+    "storage_bucket": "munch-application-7682e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688290476698:android:efd178c0e8f1af54582523",
+        "android_client_info": {
+          "package_name": "com.example.munch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688290476698-ln765uvfnme7dtcpmvq06t54nfv9ct48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3I6FqrnbFfVHVv1U6qFCOJ4aV4hSBBZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "688290476698-ln765uvfnme7dtcpmvq06t54nfv9ct48.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
