@@ -10,6 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../CustomCakeHome_Screen.dart';
 import '../Localizations/app_language.dart';
+import 'CheckLogin.dart';
+import 'Login.dart';
+import 'Register.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key, required this.closeDrawerCustom})
@@ -112,7 +115,7 @@ class _State extends State<CustomDrawer> {
                   },
                 ));
               } else {
-                //openCheckLoginCustom();
+                openCheckLoginCustom();
               }
             },
           ),
@@ -126,11 +129,16 @@ class _State extends State<CustomDrawer> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute<MyProfileScreen>(
+              if(isLoggedIn) {
+                Navigator.of(context).push(MaterialPageRoute<MyProfileScreen>(
                 builder: (BuildContext context) {
                   return MyProfileScreen();
                 },
               ));
+              }
+              else{
+                openCheckLoginCustom();
+              }
             },
           ),
           TextButton(
@@ -143,12 +151,16 @@ class _State extends State<CustomDrawer> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute<AddressesScreen>(
-                builder: (BuildContext context) {
-                  return AddressesScreen();
-                },
-              ));
+              if(isLoggedIn) {
+                Navigator.of(context).push(MaterialPageRoute<AddressesScreen>(
+                  builder: (BuildContext context) {
+                    return AddressesScreen();
+                  },
+                ));
+              }
+              else{
+                openCheckLoginCustom();
+              }
             },
           ),
           TextButton(
@@ -217,19 +229,24 @@ class _State extends State<CustomDrawer> {
               ),
             ),
             onPressed: () async {
-              widget.closeDrawerCustom();
-              if (isLoggedIn) {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.remove('UserObject');
-                await prefs.remove('CustomerId');
-                await prefs.remove('CustomerGuid');
-                await prefs.remove('token');
-                await prefs.remove('emailLogin');
-                await prefs.remove('passwordLogin');
-                await prefs.remove('FirstName');
-                await prefs.remove('MobileNumber');
-                await prefs.remove('CardPin');
-                await prefs.remove('PayfortEmail');
+              if(isLoggedIn) {
+                widget.closeDrawerCustom();
+                if (isLoggedIn) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('UserObject');
+                  await prefs.remove('CustomerId');
+                  await prefs.remove('CustomerGuid');
+                  await prefs.remove('token');
+                  await prefs.remove('emailLogin');
+                  await prefs.remove('passwordLogin');
+                  await prefs.remove('FirstName');
+                  await prefs.remove('MobileNumber');
+                  await prefs.remove('CardPin');
+                  await prefs.remove('PayfortEmail');
+                }
+              }
+              else{
+                openCheckLoginCustom();
               }
             },
           ),
@@ -260,4 +277,82 @@ class _State extends State<CustomDrawer> {
       ),
     );
   }
+
+  openCheckLoginCustom() {
+    showCheckLoginCustomDialog(context);
+  }
+
+  void showCheckLoginCustomDialog(BuildContext context) async {
+    await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return Center(
+          child: CheckLogin(),
+        );
+      },
+    ).then((value) async {
+      print('dialog dismessed');
+      final prefs = await SharedPreferences.getInstance();
+      final String? loginStatus = prefs.getString('loginStatus');
+      print('loginStatus = $loginStatus');
+      if (loginStatus == '3') {
+        openLoginCustom();
+      } else if (loginStatus == '2') {
+        openRegisterCustom();
+      }
+      prefs.setString('loginStatus', '-1');
+    });
+  }
+
+  openLoginCustom() {
+    showLoginCustomDialog(context);
+  }
+
+  openRegisterCustom() {
+    showRegisterCustomDialog(context);
+  }
+
+  void showRegisterCustomDialog(BuildContext context) async {
+    await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return const Center(
+          child: Register(),
+        );
+      },
+    ).then((value) async {
+      print('dialog Register dismessed');
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getString('openLogin') != null) openLoginCustom();
+      await prefs.remove('openLogin');
+      await prefs.remove('smsSent');
+    });
+  }
+
+
+  void showLoginCustomDialog(BuildContext context) async {
+    await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return const Center(
+          child: Login(),
+        );
+      },
+    ).then((value) {
+      print('dialog dismessed');
+    });
+  }
+
 }

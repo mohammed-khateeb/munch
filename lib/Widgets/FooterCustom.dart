@@ -96,7 +96,7 @@ class _FooterCustomState extends State<FooterCustom> {
       barrierLabel: "Barrier",
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: const Duration(milliseconds: 700),
+      transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (_, __, ___) {
         return Center(
           child: CheckLogin(),
